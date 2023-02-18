@@ -1,16 +1,10 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-using Microsoft.VisualBasic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UnlockablePostsAPI.Services
 {
-    public class UsersService : IUsersService
+    public class UserService : IUsersService
     {
         public bool ValidateSignatureFromQueryString(IQueryCollection queryParams)
         {
