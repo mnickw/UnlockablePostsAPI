@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using UnlockablePostsAPI.Services;
 
 namespace UnlockablePostsAPI.Controllers
 {
@@ -7,16 +8,20 @@ namespace UnlockablePostsAPI.Controllers
     public class NoncesController : ControllerBase
     {
         private readonly ILogger<NoncesController> _logger;
+        private readonly IUsersService _usersService;
 
-        public NoncesController(ILogger<NoncesController> logger)
+        public NoncesController(ILogger<NoncesController> logger,
+            IUsersService usersService)
         {
             _logger = logger;
+            _usersService = usersService;
         }
 
         [HttpGet("new", Name = nameof(GetNewNonce))]
         public async Task<IActionResult> GetNewNonce()
         {
-            return BadRequest();
+            bool result = _usersService.ValidateSignatureFromQueryString(HttpContext.Request.Query);
+            return Ok(result);
         }
 
         [HttpPost("validate", Name = nameof(ValidateAndGetToken))]
