@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Nethereum.Signer;
 using UnlockablePostsAPI.Data;
 using UnlockablePostsAPI.Services;
 
@@ -11,10 +12,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUsersService, UserService>();
-
 builder.Services.AddDbContext<UnlockablePostsContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddSingleton<EthereumMessageSigner>();
+
+builder.Services.AddScoped<IUsersService, UserService>();
+builder.Services.AddScoped<INonceService, NonceService>();
 
 var app = builder.Build();
 

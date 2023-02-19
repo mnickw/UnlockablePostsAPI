@@ -35,8 +35,8 @@ namespace UnlockablePostsAPI.Controllers
             if (string.IsNullOrEmpty(vk_user_id_str))
                 return BadRequest("No vk_user_id in query string.");
 
-            if (long.TryParse(vk_user_id_str, out var vk_user_id))
-                return BadRequest("Can't parse vk_user_id to int.");
+            if (!long.TryParse(vk_user_id_str, out var vk_user_id))
+                return BadRequest("Can't parse vk_user_id to long.");
 
             var guid = await _nonceService.CreateNonce(vk_user_id);
 
@@ -59,8 +59,8 @@ namespace UnlockablePostsAPI.Controllers
             if (string.IsNullOrEmpty(vk_user_id_str))
                 return BadRequest("No vk_user_id in query string.");
 
-            if (long.TryParse(vk_user_id_str, out var vk_user_id))
-                return BadRequest("Can't parse vk_user_id to int.");
+            if (!long.TryParse(vk_user_id_str, out var vk_user_id))
+                return BadRequest("Can't parse vk_user_id to long.");
 
             bool validationSucceed = await _nonceService.ValidateNonce(vk_user_id, dto.SignedNonce, dto.NewAddress);
 

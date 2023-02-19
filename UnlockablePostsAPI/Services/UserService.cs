@@ -54,7 +54,7 @@ namespace UnlockablePostsAPI.Services
 
         public async Task<long?> CheckExistingUserForAddress(string address)
         {
-            return await _db.AddressesWithVkIds.Where(a => a.Address == address).Select(a => a.VkUserId).FirstOrDefaultAsync();
+            return await _db.AddressesWithVkIds.Where(a => a.Address == address).Select(a => (long?)a.VkUserId).FirstOrDefaultAsync();
         }
 
         public async Task AddAddressForUser(long vk_user_id, string address)
