@@ -67,6 +67,8 @@ namespace UnlockablePostsAPI.Controllers
             if (!validationSucceed)
                 return false;
 
+            // check address exist for this user
+            // check no users use this address
             // add address
 
             return true;

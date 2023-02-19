@@ -7,11 +7,25 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace UnlockablePostsAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Nonce : Migration
+    public partial class NonceAndAddress : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AddressesWithVkIds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Address = table.Column<string>(type: "text", nullable: false),
+                    VkUserId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AddressesWithVkIds", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Nonces",
                 columns: table => new
@@ -31,6 +45,9 @@ namespace UnlockablePostsAPI.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AddressesWithVkIds");
+
             migrationBuilder.DropTable(
                 name: "Nonces");
         }

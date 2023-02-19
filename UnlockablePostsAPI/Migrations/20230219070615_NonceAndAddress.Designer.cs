@@ -12,8 +12,8 @@ using UnlockablePostsAPI.Data;
 namespace UnlockablePostsAPI.Migrations
 {
     [DbContext(typeof(UnlockablePostsContext))]
-    [Migration("20230219043046_Nonce")]
-    partial class Nonce
+    [Migration("20230219070615_NonceAndAddress")]
+    partial class NonceAndAddress
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,26 @@ namespace UnlockablePostsAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("UnlockablePostsAPI.Models.AddressWithVkId", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("VkUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AddressesWithVkIds");
+                });
 
             modelBuilder.Entity("UnlockablePostsAPI.Models.Nonce", b =>
                 {

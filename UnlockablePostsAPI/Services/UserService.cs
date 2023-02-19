@@ -1,11 +1,20 @@
 ﻿using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
+using UnlockablePostsAPI.Data;
 
 namespace UnlockablePostsAPI.Services
 {
     public class UserService : IUsersService
     {
+
+        private readonly UnlockablePostsContext _db;
+
+        public UserService(UnlockablePostsContext db)
+        {
+            _db = db;
+        }
+
         public bool ValidateSignatureFromQueryString(IQueryCollection queryParams)
         {
             // TODO: Get secret key from outside
@@ -14,7 +23,7 @@ namespace UnlockablePostsAPI.Services
             if (!queryParams.TryGetValue("sign", out var signValues) || signValues.Count != 1)
                 return false;
 
-            string sign = signValues.First();
+            string? sign = signValues.FirstOrDefault();
 
             if (string.IsNullOrEmpty(sign))
                 return false;
@@ -41,5 +50,15 @@ namespace UnlockablePostsAPI.Services
                 return hashB64 == sign;
             }
         }
+
+        //public async Task<string?> CheckExistingUserForAddress(string address)
+        //{
+
+        //}
+
+        //public Task AddAddressForUser(long vk_user_id, string address)
+        //{
+
+        //}
     }
 }

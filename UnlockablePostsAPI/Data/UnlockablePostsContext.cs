@@ -8,5 +8,6 @@ namespace UnlockablePostsAPI.Data
         public UnlockablePostsContext(DbContextOptions<UnlockablePostsContext> options) : base(options) { }
 
         public DbSet<Nonce> Nonces { get; set; }
+        public DbSet<AddressWithVkId> AddressesWithVkIds { get; set; }
     }
 }
