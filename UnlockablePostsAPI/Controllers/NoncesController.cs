@@ -29,7 +29,15 @@ namespace UnlockablePostsAPI.Controllers
             if (result == false)
                 return BadRequest("Can't validate signature.");
 
-            var guid = _nonceService.CreateNonce(int.Parse(HttpContext.Request.Query["vk_user_id"].First()));
+            var vk_user_id_str = HttpContext.Request.Query["vk_user_id"].FirstOrDefault();
+
+            if (string.IsNullOrEmpty(vk_user_id_str))
+                return BadRequest("No vk_user_id in query string.");
+
+            if (long.TryParse(vk_user_id_str, out var vk_user_id))
+                return BadRequest("Can't parse vk_user_id to int.");
+
+            var guid = await _nonceService.CreateNonce(vk_user_id);
 
             return Ok(guid);
         }

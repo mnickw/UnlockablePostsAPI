@@ -2,6 +2,6 @@
 {
     public interface INonceService
     {
-        public Guid CreateNonce(int vk_user_id);
+        public Task<Guid> CreateNonce(long vk_user_id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using UnlockablePostsAPI.Models;
 
 namespace UnlockablePostsAPI.Data
 {
@@ -6,6 +7,6 @@ namespace UnlockablePostsAPI.Data
     {
         public UnlockablePostsContext(DbContextOptions<UnlockablePostsContext> options) : base(options) { }
 
-        //public DbSet<Course> Courses { get; set; }\
+        public DbSet<Nonce> Nonces { get; set; }
     }
 }

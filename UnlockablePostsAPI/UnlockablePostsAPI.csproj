@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="InputModels\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
