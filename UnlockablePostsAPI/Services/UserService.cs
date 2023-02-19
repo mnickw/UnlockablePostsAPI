@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
 using UnlockablePostsAPI.Data;
@@ -51,14 +52,15 @@ namespace UnlockablePostsAPI.Services
             }
         }
 
-        //public async Task<string?> CheckExistingUserForAddress(string address)
-        //{
+        public async Task<long?> CheckExistingUserForAddress(string address)
+        {
+            return await _db.AddressesWithVkIds.Where(a => a.Address == address).Select(a => a.VkUserId).FirstOrDefaultAsync();
+        }
 
-        //}
-
-        //public Task AddAddressForUser(long vk_user_id, string address)
-        //{
-
-        //}
+        public async Task AddAddressForUser(long vk_user_id, string address)
+        {
+            await _db.AddressesWithVkIds.AddAsync(new Models.AddressWithVkId { Address = address, VkUserId = vk_user_id });
+            await _db.SaveChangesAsync();
+        }
     }
 }

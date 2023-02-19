@@ -65,11 +65,17 @@ namespace UnlockablePostsAPI.Controllers
             bool validationSucceed = await _nonceService.ValidateNonce(vk_user_id, dto.SignedNonce, dto.NewAddress);
 
             if (!validationSucceed)
-                return false;
+                return BadRequest("Can't validate nonce.");
 
-            // check address exist for this user
-            // check no users use this address
-            // add address
+            long? existingVkUserId = await _usersService.CheckExistingUserForAddress(dto.NewAddress);
+            if (existingVkUserId != null)
+            {
+                if (existingVkUserId == vk_user_id)
+                    return true;
+                return BadRequest("Another user already using this address."); ;
+            }
+
+            await _usersService.AddAddressForUser(vk_user_id, dto.NewAddress);
 
             return true;
         }
