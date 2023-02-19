@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using UnlockablePostsAPI.InputModels;
 using UnlockablePostsAPI.Services;
 
 namespace UnlockablePostsAPI.Controllers
@@ -39,13 +40,36 @@ namespace UnlockablePostsAPI.Controllers
 
             var guid = await _nonceService.CreateNonce(vk_user_id);
 
-            return Ok(guid);
+            return guid;
         }
 
         [HttpPost("validate", Name = nameof(ValidateAndGetToken))]
-        public async Task<IActionResult> ValidateAndGetToken()
+        public async Task<ActionResult<bool>> ValidateAndGetToken([FromBody] NonceValidationDTO dto)
         {
-            return BadRequest();
+            if (string.IsNullOrEmpty(dto.NewAddress) || string.IsNullOrEmpty(dto.SignedNonce))
+                return BadRequest("Address or signed nonce was empty.");
+
+            bool result = _usersService.ValidateSignatureFromQueryString(HttpContext.Request.Query);
+
+            if (result == false)
+                return BadRequest("Can't validate signature.");
+
+            var vk_user_id_str = HttpContext.Request.Query["vk_user_id"].FirstOrDefault();
+
+            if (string.IsNullOrEmpty(vk_user_id_str))
+                return BadRequest("No vk_user_id in query string.");
+
+            if (long.TryParse(vk_user_id_str, out var vk_user_id))
+                return BadRequest("Can't parse vk_user_id to int.");
+
+            bool validationSucceed = await _nonceService.ValidateNonce(vk_user_id, dto.SignedNonce, dto.NewAddress);
+
+            if (!validationSucceed)
+                return false;
+
+            // add address
+
+            return true;
         }
     }
 }
